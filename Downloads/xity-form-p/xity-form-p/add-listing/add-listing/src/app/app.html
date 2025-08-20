@@ -1,0 +1,2122 @@
+<section class="gray-bg">
+  <div class="container">
+    <div class="col-lg-12" id="add-listing">
+      <form [formGroup]="detailForm">
+
+        <div class="card">
+          <div class="card-header">Module Purchased</div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-lg-4">
+                <div class="ps-form__billing-info">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="false"
+                      formControlName="is_store" checked />
+                    <label class="form-check-label" for="exampleRadios1">
+                      None
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="true"
+                      formControlName="is_store" />
+                    <label class="form-check-label" for="exampleRadios1">
+                      MarketPlace
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">MAIN BANNER</div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-lg-4">
+                <label> Banner Image <span>*</span></label>
+                <br />
+                <div class="d-flex justify-content-start">
+                  <button type="button" class="btn btn-primary mb-2" (click)="
+                      launchmedia(
+                        'this.detailForm.patchValue({BannerImage: this.selectedimages.og_image});'
+                      )
+                    ">
+                    Select Banner Image
+                  </button>
+                </div>
+
+                <div>
+                  <img src="{{ detailForm.controls['BannerImage'].value }}" class="thumbnail" />
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <label> Display Image (1080 * 600 px)<span>*</span></label>
+                <br />
+                <div class="d-flex justify-content-start">
+                  <button type="button" class="btn btn-primary mb-2" (click)="
+                      launchmedia(
+                        'this.detailForm.patchValue({displayImage: this.selectedimages.og_image});'
+                      )
+                    ">
+                    Select Display Image
+                  </button>
+                </div>
+                <div>
+                  <img src="{{ detailForm.controls['displayImage'].value }}" class="thumbnail" />
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <label> Banner Text <span>*</span></label>
+                <input type="text" class="form-control" formControlName="BannerText" />
+              </div>
+              <div class="col-lg-4">
+                <label>Audio file<span>*</span></label>
+                <input type="file" class="form-control" (change)="audioUpload($event)" />
+              </div>
+              <div class="col-12 col-lg-4">
+                <label>Country <span>*</span></label>
+                <ng-select name="country" appendTo="body" id="country" (change)="fetchState()"
+                  formControlName="listingDataCountry">
+                  <ng-option *ngFor="let data of country_list" value="{{ data._id }}">
+                    {{ data.name }}
+                  </ng-option>
+                </ng-select>
+              </div>
+              <div class="col-12 col-lg-4">
+                <label>State<span>*</span></label>
+                <ng-select name="state" appendTo="body" id="state" (change)="fetchCity()"
+                  formControlName="listingDataState">
+                  <ng-option *ngFor="let data of state_list" value="{{ data._id }}">
+                    {{ data.name }}
+                  </ng-option>
+                </ng-select>
+              </div>
+              <div class="col-12 col-lg-4">
+                <label>City<span>*</span></label>
+                <ng-select appendTo="body" name="city" id="city" (change)="fetchPincodes()"
+                  formControlName="listingDataCity">
+                  <ng-option *ngFor="let data of city_list" value="{{ data._id }}">
+                    {{ data.name }}
+                  </ng-option>
+                </ng-select>
+              </div>
+              <div class="col-12 col-lg-4">
+                <label>Pincode<span>*</span></label>
+                <ng-select appendTo="body" name="pincode" id="pincode" formControlName="listingDataPincode">
+                  <ng-option appendTo="body" *ngFor="let data of pincode_list" value="{{ data._id }}">
+                    {{ data.name }}
+                  </ng-option>
+                </ng-select>
+              </div>
+              <div class="col-lg-4">
+                <label> Latitude <span>*</span></label>
+                <input type="number" class="form-control" formControlName="latitude" />
+              </div>
+              <div class="col-lg-4">
+                <label> Longitude <span>*</span></label>
+                <input type="number" class="form-control" formControlName="longitude" />
+              </div>
+
+              <div class="col-lg-4" *ngIf="role != 'AGENT'">
+                <label> Agent <span>*</span></label>
+                <ng-select appendTo="body" formControlName="agent">
+                  <ng-option *ngFor="let data of agents" value="{{ data._id }}">
+                    {{ data.name }}
+                  </ng-option>
+                </ng-select>
+              </div>
+              <div class="col-12">
+                <div class="py-3 d-flex justify-content-end">
+                  <button type="button" class="btn btn-primary mb-2 mr-2" (click)="saveMainBanner()">
+                    save
+                  </button>
+                </div>
+                <!-- <div class="toggle-container d-flex justify-content-center gap-3">
+                <label class="toggle-label">Bestseller:</label>
+                <label class="toggle-switch">
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="data[col.field]"
+                    (change)="toggleBestseller(data)"
+                  />
+                  <span class="slider round"></span>
+                </label>
+              </div> -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">DETAILS</div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-lg-4">
+                <label>Title<span>*</span></label>
+                <input type="text" class="form-control" formControlName="TypeofPlace" />
+                <!-- <small
+            *ngIf="
+              !detailForm.get('TypeofPlace').valid &&
+              detailForm.get('TypeofPlace').touched
+            "
+            >the text you entered is invalid</small
+          > -->
+              </div>
+              <div class="col-lg-4">
+                <label>Logo Image<span>*</span></label>
+                <br />
+                <div class="d-flex py-3 justify-content-start">
+                  <button type="button" class="btn btn-primary mb-2" (click)="
+                      launchmedia(
+                        'this.detailForm.patchValue({Placeimage: this.selectedimages.og_image});'
+                      )
+                    ">
+                    Image
+                  </button>
+                </div>
+                <div>
+                  <img src="{{ detailForm.controls['Placeimage'].value }}" class="thumbnail" />
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <label>about<span>*</span></label>
+                <input type="text" class="form-control" formControlName="AboutPlace" />
+                <!-- <small
+            *ngIf="
+              !detailForm.get('AboutPlace').valid &&
+              detailForm.get('AboutPlace').touched
+            "
+            >the text you entered is invalid</small
+          > -->
+              </div>
+              <div class="col-lg-4">
+                <label>featured<span>*</span></label>
+                <select class="form-control" formControlName="featured">
+                  <option value="yes">YES</option>
+                  <option value="no">NO</option>
+                </select>
+              </div>
+              <div class="col-lg-4">
+                <label>verified<span>*</span></label>
+                <select class="form-control" formControlName="verified">
+                  <option value="yes">YES</option>
+                  <option value="no">NO</option>
+                </select>
+              </div>
+              <div class="col-lg-4">
+                <label>recommended<span>*</span></label>
+                <select class="form-control" formControlName="recommended">
+                  <option value="yes">YES</option>
+                  <option value="no">NO</option>
+                </select>
+              </div>
+              <div class="col-lg-4">
+                <label>Distance<span>*</span></label>
+                <input type="number" class="form-control" formControlName="Placedistance" />
+              </div>
+              <!-- <div class="col-lg-4">
+          <label>review<span>*</span></label>
+          <input type="text" class="form-control" formControlName="review" />
+        </div>
+        <div class="col-lg-4">
+          <label>Number of reviews<span>*</span></label>
+          <input
+            type="number"
+            class="form-control"
+            formControlName="Numberofreviews"
+          />
+        </div>
+        <div class="col-lg-4">
+          <label>related category<span>*</span></label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="relatedCategory"
+          />
+        </div> -->
+              <div class="col-lg-4">
+                <label>owner<span>*</span></label>
+                <input type="text" class="form-control" formControlName="owner" />
+              </div>
+              <div class="col-lg-4">
+                <label>whether open?<span>*</span></label>
+                <select class="form-control" formControlName="whetheropen">
+                  <option value="yes">YES</option>
+                  <option value="no">NO</option>
+                </select>
+              </div>
+              <!-- <div class="col-lg-4">
+          <label>viewed<span>*</span></label>
+          <input type="number" class="form-control" formControlName="viewed" />
+        </div> -->
+              <div class="col-lg-4">
+                <label>Discount (%)<span></span></label>
+                <input type="number" class="form-control" formControlName="discount" />
+              </div>
+              <div class="col-lg-12">
+                <label>Address<span>*</span></label>
+                <textarea formControlName="listing_address" class="form-control" rows="4">
+                </textarea>
+              </div>
+              <div class="py-3 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary mb-2 mr-2" (click)="saveDetailsSection()">
+                  save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">CATEGORIES</div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-lg-4">
+                <label>Related main categories<span>*</span></label>
+                <ng-select appendTo="body" (change)="fetchPrimaryCat()" [items]="categoryList" bindLabel="name"
+                  bindValue="_id" labelForId="state" placeholder="Select main categories"
+                  formControlName="relatedMainCategories">
+                </ng-select>
+              </div>
+              <div class="col-lg-4">
+                <label>Related primary categories<span>*</span></label>
+                <ng-select appendTo="body" [items]="subCategoryList" (change)="fetchSecondaryCat()" bindLabel="name"
+                  bindValue="_id" labelForId="state" placeholder="Select sub categories"
+                  formControlName="relatedPrimaryCategory">
+                </ng-select>
+              </div>
+              <div class="col-lg-4">
+                <label>Related secondary categories<span>*</span></label>
+                <ng-select appendTo="body" [items]="secondaryCategoryList" (change)="fetchTertiaryCat()"
+                  bindLabel="name" bindValue="_id" labelForId="state" placeholder="Select sub categories"
+                  formControlName="relatedSecondaryCategories">
+                </ng-select>
+              </div>
+              <div class="col-lg-4">
+                <label>Related tertiary categories<span>*</span></label>
+                <ng-select appendTo="body" [items]="tertiaryCategoryList" bindLabel="name" bindValue="_id"
+                  labelForId="state" placeholder="Select sub categories" formControlName="relatedTertiaryCategories">
+                </ng-select>
+              </div>
+              <div class="py-3 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary mb-2 mr-2" (click)="saveCategoriesSection()">
+                  save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">TAGS</div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-lg-4">
+                <label>location tags<span>*</span></label>
+                <ng-select appendTo="body" [items]="tagslist" bindLabel="name" bindValue="_id" labelForId="state"
+                  [multiple]="true" placeholder="Select LOCATION TAGS" formControlName="selectedLocationTagsName">
+                </ng-select>
+              </div>
+              <div class="col-lg-4">
+                <label>service tags<span>*</span></label>
+                <ng-select appendTo="body" [items]="tagslist" bindLabel="name" bindValue="_id" labelForId="state"
+                  [multiple]="true" placeholder="Select SERVICES TAGS" formControlName="selectedServicesTagsName">
+                </ng-select>
+              </div>
+              <div class="col-lg-4">
+                <label>products tags<span>*</span></label>
+                <ng-select appendTo="body" [items]="tagslist" bindLabel="name" bindValue="_id" labelForId="state"
+                  [multiple]="true" placeholder="Select PRODUCTS TAGS" formControlName="selectedProductsTagsName">
+                </ng-select>
+              </div>
+              <div class="col-lg-4">
+                <label>brand tags<span>*</span></label>
+                <ng-select appendTo="body" [items]="tagslist" bindLabel="name" bindValue="_id" labelForId="state"
+                  [multiple]="true" placeholder="Select PRODUCTS TAGS" formControlName="selectedBrandTagsName">
+                </ng-select>
+              </div>
+              <div class="py-3 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary mb-2 mr-2" (click)="saveTagsSection()">
+                  save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">Service</div>
+          <div class="card-body">
+            <div class="col-lg-4">
+              <label>Select the Service provided<span>*</span></label>
+              <ng-select appendTo="body" [items]="service_list" bindLabel="name" bindValue="_id" labelForId="state"
+                [multiple]="true" placeholder="Select service provided" formControlName="service_provided">
+              </ng-select>
+            </div>
+            <div class="py-3 d-flex justify-content-end">
+              <button type="button" class="btn btn-primary mb-2 mr-2" (click)="saveServiceSection()">
+                save
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">ABOUT BUSINESS</div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-lg-12">
+                <label>about content<span>*</span></label>
+                <textarea type="text" class="form-control" formControlName="aboutContent" rows="5">
+                </textarea>
+                <!-- <small
+            *ngIf="
+              !detailForm.get('aboutContent').valid &&
+              detailForm.get('aboutContent').touched
+            "
+            >the text you entered is invalid</small
+          > -->
+              </div>
+              <div class="col-lg-12">
+                <label>message content<span>*</span></label>
+                <textarea type="text" class="form-control" formControlName="messageContent" rows="5"></textarea>
+                <!-- <small
+            *ngIf="
+              !detailForm.get('messageContent').valid &&
+              detailForm.get('messageContent').touched
+            "
+            >the text you entered is invalid</small
+          > -->
+              </div>
+              <div class="col-lg-12">
+                <label>timeline content<span>*</span></label>
+                <textarea type="text" class="form-control" formControlName="timelineContent" rows="5"></textarea>
+                <!-- <small
+            *ngIf="
+              !detailForm.get('timelineContent').valid &&
+              detailForm.get('timelineContent').touched
+            "
+            >the text you entered is invalid</small
+          > -->
+              </div>
+              <div class="col-lg-12">
+                <label>fun facts content<span>*</span></label>
+                <textarea type="text" class="form-control" formControlName="funFactsContent" rows="5"></textarea>
+                <!-- <small
+            *ngIf="
+              !detailForm.get('funFactsContent').valid &&
+              detailForm.get('funFactsContent').touched
+            "
+            >the text you entered is invalid</small
+          > -->
+              </div>
+              <div class="col-lg-12">
+                <label>More Info content<span>*</span></label>
+                <textarea type="text" class="form-control" formControlName="moreInfo_content" rows="5"></textarea>
+                <!-- <small
+            *ngIf="
+              !detailForm.get('funFactsContent').valid &&
+              detailForm.get('funFactsContent').touched
+            "
+            >the text you entered is invalid</small
+          > -->
+              </div>
+              <div class="col-lg-12">
+                <label>Mission<span>*</span></label>
+                <textarea type="text" class="form-control" formControlName="moreInfo_mission" rows="1"></textarea>
+              </div>
+              <div class="col-lg-12">
+                <label>Vision<span>*</span></label>
+                <textarea type="text" class="form-control" formControlName="moreInfo_vision" rows="1"></textarea>
+              </div>
+              <div class="col-lg-12">
+                <label>Industries Served<span>*</span></label>
+                <textarea type="text" class="form-control" formControlName="moreInfo_serve" rows="1"></textarea>
+              </div>
+              <div class="col-lg-12">
+                <label>Our Approach<span>*</span></label>
+                <textarea type="text" class="form-control" formControlName="moreInfo_approach" rows="1"></textarea>
+              </div>
+              <div class="col-lg-12">
+                <label>What We Do<span>*</span></label>
+                <textarea type="text" class="form-control" formControlName="moreInfo_whatWeDo" rows="1"></textarea>
+              </div>
+              <div class="col-lg-4">
+                <label>Brochure 1<span>*</span></label>
+                <br />
+                <div class="d-flex justify-content-start">
+                  <button type="button" class="btn btn-primary mb-2" (click)="
+                      launchmedia(
+                        'this.detailForm.patchValue({Brochure1: this.selectedimages.og_image});'
+                      )
+                    ">
+                    Brochure 1
+                  </button>
+                </div>
+                <div>
+                  <img src="{{ detailForm.controls['Brochure1'].value }}" class="thumbnail" />
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <label>Brochure 2<span>*</span></label>
+                <br />
+                <div class="d-flex justify-content-start">
+                  <button type="button" class="btn btn-primary mb-2" (click)="
+                      launchmedia(
+                        'this.detailForm.patchValue({Brochure2: this.selectedimages.og_image});'
+                      )
+                    ">
+                    Brochure 2
+                  </button>
+                </div>
+                <div>
+                  <img src="{{ detailForm.controls['Brochure2'].value }}" class="thumbnail" />
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <label>Brochure 3<span>*</span></label>
+                <br />
+                <div class="d-flex justify-content-start">
+                  <button type="button" class="btn btn-primary mb-2" (click)="
+                      launchmedia(
+                        'this.detailForm.patchValue({Brochure3: this.selectedimages.og_image});'
+                      )
+                    ">
+                    Brochure 3
+                  </button>
+                </div>
+                <div>
+                  <img src="{{ detailForm.controls['Brochure3'].value }}" class="thumbnail" />
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <label>QR Code<span>*</span></label>
+                <br />
+                <div class="d-flex justify-content-start">
+                  <button type="button" class="btn btn-primary mb-2" (click)="
+                      launchmedia(
+                        'this.detailForm.patchValue({qrCodeImageOverview: this.selectedimages.og_image});'
+                      )
+                    ">
+                    QR Code
+                  </button>
+                </div>
+                <div>
+                  <img src="{{ detailForm.controls['qrCodeImageOverview'].value }}" class="thumbnail" />
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <label>Year Established<span>*</span></label>
+                <input type="Date" class="form-control" formControlName="yearEstablished" />
+              </div>
+              <div class="col-lg-4">
+                <label>GST In<span>*</span></label>
+                <input type="text" class="form-control" formControlName="gstIn" />
+              </div>
+              <div class="py-3 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary mb-2 mr-2" (click)="saveAboutBusinessSection()">
+                  save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">FUN FACTS</div>
+          <div class="card-body">
+            <div class="row">
+              <ng-container formArrayName="funFacts" *ngFor="let w of funFacts.controls; let i = index">
+                <div class="row" [formGroupName]="i">
+                  <div class="col-lg-12">
+                    <label>Content</label>
+                    <textarea type="text" class="form-control" formControlName="content" rows="2">
+                    </textarea>
+                  </div>
+                </div>
+              </ng-container>
+              <div class="d-flex py-3 justify-content-end">
+                <button class="btn btn-primary" (click)="funFactAdd()">
+                  add
+                </button>
+              </div>
+
+              <div class="py-3 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary mb-2 mr-2" (click)="saveFunFactsSection()">
+                  save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">Time line</div>
+          <div class="card-body">
+            <div class="row">
+              <ng-container formArrayName="timeline" *ngFor="let w of timeline.controls; let i = index">
+                <div class="row" [formGroupName]="i">
+                  <div class="col-lg-4">
+                    <label>Date</label>
+                    <input type="date" class="form-control" formControlName="date" />
+                  </div>
+                </div>
+                <div class="row" [formGroupName]="i">
+                  <div class="col-lg-12">
+                    <label>Content</label>
+                    <textarea type="text" class="form-control" formControlName="content" rows="2">
+                    </textarea>
+                  </div>
+                </div>
+              </ng-container>
+              <div class="d-flex py-3 justify-content-end">
+                <button class="btn btn-primary" (click)="timelineAdd()">
+                  add
+                </button>
+              </div>
+              <div class="py-3 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary mb-2 mr-2" (click)="saveTimelineSection()">
+                  save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">ALMANAC</div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-lg-4">
+                <label>Year Created<span>*</span></label>
+                <input type="date" class="form-control" formControlName="created_almanac" />
+              </div>
+              <div class="col-lg-4">
+                <label>Year Verified<span>*</span></label>
+                <input type="date" class="form-control" formControlName="verified_almanac" />
+              </div>
+              <div class="col-lg-4">
+                <label>Year Founded<span>*</span></label>
+                <input type="date" class="form-control" formControlName="founded_almanac" />
+              </div>
+              <div class="col-lg-4">
+                <label>Year Updated<span>*</span></label>
+                <input type="date" class="form-control" formControlName="yearUpdated_almanac" />
+              </div>
+              <div class="col-lg-4">
+                <label>Year Incorporated<span>*</span></label>
+                <input type="date" class="form-control" formControlName="yearIncorporated_almanac" />
+              </div>
+              <!-- <div class="col-lg-4">
+          <label>Timeline Date<span>*</span></label>
+          <input
+            type="date"
+            class="form-control"
+            formControlName="timeline_date"
+          />
+        </div> -->
+              <div class="col-lg-4">
+                <label>Projects Completed<span>*</span></label>
+                <input type="number" class="form-control" formControlName="keyFacts_projects" />
+              </div>
+              <div class="col-lg-4">
+                <label>Employees<span>*</span></label>
+                <input type="number" class="form-control" formControlName="employees_almanac" />
+              </div>
+              <div class="col-lg-4">
+                <label>Branches<span>*</span></label>
+                <input type="number" class="form-control" formControlName="branches_almanac" />
+              </div>
+              <div class="col-lg-4">
+                <label>Annual Revenue<span>*</span></label>
+                <input type="number" class="form-control" formControlName="annualRevenue_almanac" />
+              </div>
+              <div class="col-lg-4">
+                <label>Location type<span>*</span></label>
+                <input type="text" class="form-control" formControlName="loctionType_almanac" />
+              </div>
+              <div class="col-lg-4">
+                <label>AKA<span>*</span></label>
+                <input type="number" class="form-control" formControlName="aka_almanac" />
+              </div>
+            </div>
+            <div class="py-3 d-flex justify-content-end">
+              <button type="button" class="btn btn-primary mb-2 mr-2" (click)="saveMoreInfoSection()">
+                save
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">GALLERY</div>
+          <div class="card-body">
+            <div class="row">
+              <ng-container formArrayName="GalleryPhotos" *ngFor="let w of GalleryPhotos.controls; let i = index">
+                <div class="row" [formGroupName]="i">
+                  <div class="col-lg-4">
+                    <label>upload gallery images<span>*</span></label>
+                    <br />
+                    <div class="d-flex py-3 justify-content-start">
+                      <button type="button" class="btn btn-primary mb-2" (click)="
+                          launchmedia(
+                            'this.detailForm.get(\'GalleryPhotos\').controls[' +
+                              i +
+                              '].patchValue({ image: this.selectedimages.og_image })'
+                          )
+                        ">
+                        Gallery Image
+                      </button>
+                    </div>
+                    <div>
+                      <img src="{{
+                          detailForm.controls['GalleryPhotos'].value[i]
+                            .image
+                        }}" class="thumbnail" />
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+              <div class="d-flex py-3 justify-content-end">
+                <button class="btn btn-primary" (click)="GalleryPhotosadd()">
+                  add
+                </button>
+              </div>
+              <div class="py-3 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary mb-2 mr-2" (click)="saveGallerySection()">
+                  save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">OUR TEAM</div>
+          <div class="card-body">
+            <div class="row">
+              <ng-container formArrayName="team" *ngFor="let w of team.controls; let i = index">
+                <div class="row" [formGroupName]="i">
+                  <div class="col-lg-4">
+                    <label>image<span>*</span></label>
+                    <br />
+
+                    <div class="d-flex py-3 justify-content-start">
+                      <button type="button" class="btn btn-primary mb-2" (click)="
+                          launchmedia(
+                            'this.detailForm.get(\'team\').controls[' +
+                              i +
+                              '].patchValue({ image: this.selectedimages.og_image })'
+                          )
+                        ">
+                        Team Image
+                      </button>
+                    </div>
+                    <div>
+                      <img src="{{
+                          detailForm.controls['team'].value[i].image
+                        }}" class="thumbnail" />
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <label>Name<span>*</span></label>
+                    <input type="text" class="form-control" formControlName="memberName" />
+                  </div>
+                  <div class="col-lg-4">
+                    <label>Designation<span>*</span></label>
+                    <input type="text" class="form-control" formControlName="memberRole" />
+                  </div>
+                  <div class="col-lg-4">
+                    <label>Email<span>*</span></label>
+                    <input type="text" class="form-control" formControlName="memberEmail" />
+                  </div>
+                  <div class="col-lg-4">
+                    <label>Contact<span>*</span></label>
+                    <input type="text" class="form-control" formControlName="memberContact" />
+                    <!-- <label>Mobile (Unique) <span>*</span></label
+              ><br />
+              <ngx-intl-tel-input
+                [cssClass]="'custom'"
+                [preferredCountries]="preferredCountries"
+                [enableAutoCountrySelect]="true"
+                [enablePlaceholder]="true"
+                [customPlaceholder]="'+917038618205'"
+                [searchCountryFlag]="true"
+                [searchCountryField]="[
+                  SearchCountryField.Iso2,
+                  SearchCountryField.Name
+                ]"
+                [selectFirstCountry]="false"
+                [selectedCountryISO]="CountryISO.India"
+                [maxLength]="10"
+                [phoneValidation]="true"
+                [separateDialCode]="separateDialCode"
+                [numberFormat]="PhoneNumberFormat.National"
+                name="phone"
+                formControlName="memberContact"
+              >
+              </ngx-intl-tel-input
+              ><br />
+              <small
+                *ngIf="
+                  !detailForm.get('memberContact').valid &&
+                  detailForm.get('memberContact').touched
+                "
+                >the mobile number you entered is invalid</small
+              > -->
+                  </div>
+                  <div class="col-lg-4">
+                    <label>category<span>*</span></label>
+                    <select class="form-control" formControlName="memberCategory">
+                      <option value="customerCare">Customer Care</option>
+                      <option value="service">Service</option>
+                      <option value="sales">Sales</option>
+                      <option value="admin">Admin</option>
+                      <option value="board">Board</option>
+                    </select>
+                  </div>
+                </div>
+              </ng-container>
+              <div class="d-flex py-3 justify-content-end">
+                <button class="btn btn-primary" (click)="teamadd()">add</button>
+              </div>
+
+              <div class="py-3 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary mb-2 mr-2" (click)="saveOurTeamSection()">
+                  save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">AMENETIES</div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-lg-4">
+                <label>amenities<span>*</span></label>
+                <ng-select appendTo="body" [items]="amanetiesArray" bindLabel="name" bindValue="_id" [multiple]="true"
+                  placeholder="Select Ameneties" formControlName="selectedAmenetiesName">
+                </ng-select>
+              </div>
+              <!-- <div class="col-lg-4">
+          <label>specialities<span>*</span></label>
+          <ng-select
+            appendTo="body"
+            [items]="Specialities"
+            bindLabel="name"
+            bindValue="_id"
+            labelForId="state"
+            [multiple]="true"
+            placeholder="Select Specialities"
+            formControlName="selectedSpecialitiesName"
+          >
+          </ng-select>
+        </div> -->
+              <!-- <div class="col-lg-4">
+          <label>site features<span>*</span></label>
+          <ng-select
+          appendTo="body"
+            [items]="SiteFeatures"
+            bindLabel="name"
+            bindValue="name"
+            labelForId="state"
+            [multiple]="true"
+            placeholder="Select FEATURES"
+            formControlName="selectedSiteFeaturesName"
+          >
+          </ng-select>
+        </div>
+        <div class="col-lg-4">
+          <label>site services<span>*</span></label>
+          <ng-select
+          appendTo="body"
+            [items]="SiteServices"
+            bindLabel="name"
+            bindValue="name"
+            labelForId="state"
+            [multiple]="true"
+            placeholder="Select SERVICES"
+            formControlName="selectedSiteServicesName"
+          >
+          </ng-select>
+        </div> -->
+
+              <div class="py-3 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary mb-2 mr-2" (click)="saveAmenitiesSection()">
+                  save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">Speciality</div>
+          <div class="card-body">
+            <div class="row">
+              <ng-container formArrayName="selectedSpecialitiesName" *ngFor="
+                  let w of selectedSpecialitiesName.controls;
+                  let i = index
+                ">
+                <div class="row" [formGroupName]="i">
+                  <div class="col-lg-4">
+                    <label>Name<span>*</span></label>
+                    <input type="text" class="form-control" formControlName="name" />
+                  </div>
+                  <div class="col-lg-4" *ngIf="i > 0">
+                    <button (click)="speciality__remove(i)" class="btn btn-danger mt-4">
+                      remove
+                    </button>
+                  </div>
+                </div>
+              </ng-container>
+              <div class="d-flex py-3 justify-content-end">
+                <button class="btn btn-primary" (click)="speciality_add()">
+                  add
+                </button>
+              </div>
+              <div class="py-3 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary mb-2 mr-2" (click)="saveSpecialitiesSection()">
+                  save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">ADVERTISEMENTS</div>
+          <div class="card-body">
+            <div class="row">
+              <ng-container formArrayName="slider" *ngFor="let w of slider.controls; let i = index">
+                <div class="row" [formGroupName]="i">
+                  <div class="col-lg-4">
+                    <label>slider image<span>*</span></label>
+                    <br />
+                    <div class="d-flex py-3 justify-content-start">
+                      <button type="button" class="btn btn-primary mb-2" (click)="
+                          launchmedia(
+                            'this.detailForm.get(\'slider\').controls[' +
+                              i +
+                              '].patchValue({ image: this.selectedimages.og_image })'
+                          )
+                        ">
+                        Slider Image
+                      </button>
+                    </div>
+                    <div>
+                      <img src="{{
+                          detailForm.controls['slider'].value[i].image
+                        }}" class="thumbnail" />
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+              <div class="d-flex py-3 justify-content-end">
+                <button class="btn btn-primary" (click)="slideradd()">
+                  add
+                </button>
+              </div>
+              <div class="py-3 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary mb-2 mr-2" (click)="saveSliderSection()">
+                  save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">HIGHLIGHTED PRODUCTS</div>
+          <div class="card-body">
+            <div class="row">
+              <ng-container formArrayName="allHighlightedProducts"
+                *ngFor="let w of allHighlightedProducts.controls; let i = index">
+                <div class="row" [formGroupName]="i">
+                  <div class="col-lg-4">
+                    <label> image<span>*</span></label>
+                    <br />
+                    <div class="d-flex py-3 justify-content-start">
+                      <button type="button" class="btn btn-primary mb-2" (click)="
+                          launchmedia(
+                            'this.detailForm.get(\'allHighlightedProducts\').controls[' +
+                              i +
+                              '].patchValue({ image: this.selectedimages.og_image })'
+                          )
+                        ">
+                        Image
+                      </button>
+                    </div>
+                    <div>
+                      <img src="{{
+                          detailForm.controls['allHighlightedProducts']
+                            .value[i].image
+                        }}" class="thumbnail" />
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <label>food name<span>*</span></label>
+                    <input type="type" class="form-control" formControlName="title" />
+                  </div>
+                  <div class="col-lg-4">
+                    <label>about food<span>*</span></label>
+                    <input type="type" class="form-control" formControlName="description" />
+                  </div>
+                  <div class="col-lg-4">
+                    <label>cost<span>*</span></label>
+                    <input type="number" class="form-control" formControlName="Price" />
+                  </div>
+                  <div class="col-lg-4">
+                    <label>category<span>*</span></label>
+                    <ng-select appendTo="body" [items]="productCategory" [maxSelectedItems]="1" bindLabel="name"
+                      bindValue="_id" [multiple]="true" placeholder="Select Category"
+                      formControlName="product_category">
+                    </ng-select>
+                  </div>
+                </div>
+              </ng-container>
+              <div class="d-flex py-3 justify-content-end">
+                <button class="btn btn-primary" (click)="allHighlightedProductsadd()">
+                  add
+                </button>
+              </div>
+              <div class="col-lg-4">
+                <label>catalogue<span>*</span></label>
+                <br />
+
+                <div class="d-flex py-3 justify-content-start">
+                  <button type="button" class="btn btn-primary mb-2" (click)="
+                      launchmedia(
+                        'this.detailForm.patchValue({CatalogueallHighlightedProducts: this.selectedimages.og_image});'
+                      )
+                    ">
+                    Catalogue
+                  </button>
+                </div>
+                <div>
+                  <img src="{{
+                      detailForm.controls['CatalogueallHighlightedProducts']
+                        .value
+                    }}" class="thumbnail" />
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <label>QR Code<span>*</span></label>
+                <br />
+
+                <div class="d-flex py-3 justify-content-start">
+                  <button type="button" class="btn btn-primary mb-2" (click)="
+                      launchmedia(
+                        'this.detailForm.patchValue({qrCodeForProducts: this.selectedimages.og_image});'
+                      )
+                    ">
+                    QR Code
+                  </button>
+                </div>
+                <div>
+                  <img src="{{ detailForm.controls['qrCodeForProducts'].value }}" class="thumbnail" />
+                </div>
+              </div>
+              <div class="py-3 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary mb-2 mr-2" (click)="saveHighlightedProductsSection()">
+                  save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">LICENSES</div>
+          <div class="card-body">
+            <div class="row">
+              <ng-container formArrayName="Licenses" *ngFor="let w of Licenses.controls; let i = index">
+                <div class="row" [formGroupName]="i">
+                  <div class="col-lg-4">
+                    <label>upload licenses<span>*</span></label>
+                    <input type="file" class="form-control" (change)="doc_upload($event, i, 'Licenses')" />
+                  </div>
+                  <div class="col-lg-4" *ngIf="i > 0">
+                    <button (click)="Licenses_remove(i)" class="btn btn-danger mt-4">
+                      remove
+                    </button>
+                  </div>
+                </div>
+              </ng-container>
+              <div class="d-flex py-3 justify-content-end">
+                <button class="btn btn-primary" (click)="Licensesadd()">
+                  add
+                </button>
+              </div>
+              <div class="py-3 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary mb-2 mr-2" (click)="saveLicensesSection()">
+                  save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">AWARDS</div>
+          <div class="card-body">
+            <div class="row">
+              <ng-container formArrayName="Awards" *ngFor="let w of Awards.controls; let i = index">
+                <div class="row" [formGroupName]="i">
+                  <div class="col-lg-4">
+                    <label>upload awards<span>*</span></label>
+                    <input type="file" class="form-control" (change)="doc_upload($event, i, 'Awards')" />
+                  </div>
+                  <div class="col-lg-4" *ngIf="i > 0">
+                    <button (click)="Awards_remove(i)" class="btn btn-danger mt-4">
+                      remove
+                    </button>
+                  </div>
+                </div>
+              </ng-container>
+              <div class="d-flex py-3 justify-content-end">
+                <button class="btn btn-primary" (click)="Awardsadd()">
+                  add
+                </button>
+              </div>
+              <div class="py-3 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary mb-2 mr-2" (click)="saveAwardsSection()">
+                  save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">CERTIFICATIONS</div>
+          <div class="card-body">
+            <div class="row">
+              <ng-container formArrayName="Certifications" *ngFor="let w of Certifications.controls; let i = index">
+                <div class="row" [formGroupName]="i">
+                  <div class="col-lg-4">
+                    <label>upload Certificates<span>*</span></label>
+                    <input type="file" class="form-control" (change)="doc_upload($event, i, 'Certifications')" />
+                  </div>
+                  <div class="col-lg-4" *ngIf="i > 0">
+                    <button (click)="Certifications_remove(i)" class="btn btn-danger mt-4">
+                      remove
+                    </button>
+                  </div>
+                </div>
+              </ng-container>
+              <div class="d-flex py-3 justify-content-end">
+                <button class="btn btn-primary" (click)="Certificationsadd()">
+                  add
+                </button>
+              </div>
+              <div class="py-3 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary mb-2 mr-2" (click)="saveCertificationsSection()">
+                  save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">SOCIAL LINKS</div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-lg-4">
+                <label>Facebook<span>*</span></label>
+                <input type="text" class="form-control" formControlName="facebookLink" />
+              </div>
+              <div class="col-lg-4">
+                <label>Instagram<span>*</span></label>
+                <input type="text" class="form-control" formControlName="instagramLink" />
+              </div>
+              <div class="col-lg-4">
+                <label>Twitter<span>*</span></label>
+                <input type="text" class="form-control" formControlName="twitterLink" />
+              </div>
+              <div class="col-lg-4">
+                <label>Pinterest<span>*</span></label>
+                <input type="text" class="form-control" formControlName="pinterestLink" />
+              </div>
+              <div class="col-lg-4">
+                <label>linkedIn<span>*</span></label>
+                <input type="text" class="form-control" formControlName="linkedInLink" />
+              </div>
+              <div class="col-lg-4">
+                <label>Youtube<span>*</span></label>
+                <input type="text" class="form-control" formControlName="youtubeLink" />
+              </div>
+              <div class="py-3 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary mb-2 mr-2" (click)="saveSocialLinksSection()">
+                  save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- <div class="card">
+    <div class="card-header">CONNECTION</div>
+    <div class="card-body">
+      <div class="row">
+        <ng-container
+          formArrayName="Connection"
+          *ngFor="let w of Connection.controls; let i = index"
+        >
+          <div class="row" [formGroupName]="i">
+            <div class="col-lg-4">
+              <label>Image<span>*</span></label>
+              <input type="file" class="form-control" formControlName="image" />
+            </div>
+            <div class="col-lg-4">
+              <label>Name<span>*</span></label>
+              <input type="text" class="form-control" formControlName="Name" />
+            </div>
+            <div class="col-lg-4">
+              <label>address<span>*</span></label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="address"
+              />
+            </div>
+            <div class="col-lg-4">
+              <label>type<span>*</span></label>
+              <input type="text" class="form-control" formControlName="type" />
+            </div>
+            <div class="col-lg-4">
+              <label>rating<span>*</span></label>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="rating"
+              />
+            </div>
+          </div>
+        </ng-container>
+        <div class="d-flex py-3 justify-content-end">
+          <button class="btn btn-primary" (click)="Certificationsadd()">
+            add
+          </button>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+        <!-- <div class="card">
+    <div class="card-header">FRIENDS/NEIGHBORS</div>
+    <div class="card-body">
+      <div class="row">
+        <ng-container
+          formArrayName="FriendsConnections"
+          *ngFor="let w of FriendsConnections.controls; let i = index"
+        >
+          <div class="row" [formGroupName]="i">
+            <div class="col-lg-4">
+              <label>Image<span>*</span></label>
+              <input type="file" class="form-control" formControlName="image" />
+            </div>
+            <div class="col-lg-4">
+              <label>Name<span>*</span></label>
+              <input type="text" class="form-control" formControlName="Name" />
+            </div>
+            <div class="col-lg-4">
+              <label>address<span>*</span></label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="address"
+              />
+            </div>
+            <div class="col-lg-4">
+              <label>type<span>*</span></label>
+              <input type="text" class="form-control" formControlName="type" />
+            </div>
+            <div class="col-lg-4">
+              <label>rating<span>*</span></label>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="rating"
+              />
+            </div>
+          </div>
+        </ng-container>
+        <div class="d-flex py-3 justify-content-end">
+          <button class="btn btn-primary" (click)="FriendsConnectionsadd()">
+            add
+          </button>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+        <div class="card">
+          <div class="card-header">ADDITIONAL INFO</div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-lg-12">
+                <label>FAQ<span>*</span></label>
+                <textarea type="text" class="form-control" formControlName="faqAdditionalInfo" rows="5"></textarea>
+              </div>
+              <div class="col-lg-12">
+                <label>Terms & Conditions<span>*</span></label>
+                <textarea type="text" class="form-control" formControlName="tcAdditionalInfo" rows="5"></textarea>
+              </div>
+              <div class="col-lg-12">
+                <label>Disclaimer<span>*</span></label>
+                <textarea type="text" class="form-control" formControlName="disclaimerAdditionalInfo"
+                  rows="5"></textarea>
+              </div>
+
+              <div class="py-3 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary mb-2 mr-2" (click)="saveAdditionalInfoSection()">
+                  save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- <div class="card">
+    <div class="card-header">ADD REVIEW</div>
+    <div class="card-body">
+      <div class="row">
+        <ng-container
+          formArrayName="AddReview"
+          *ngFor="let w of AddReview.controls; let i = index"
+        >
+          <div class="row" [formGroupName]="i">
+            <div class="col-lg-4">
+              <label>name<span>*</span></label>
+              <input type="text" class="form-control" formControlName="name" />
+            </div>
+            <div class="col-lg-4">
+              <label>review<span>*</span></label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="review"
+              />
+            </div>
+            <div class="col-lg-4">
+              <label>email<span>*</span></label>
+              <input type="text" class="form-control" formControlName="email" />
+            </div>
+            <div class="col-lg-4">
+              <label>Cleanliness<span>*</span></label>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="Cleanliness"
+              />
+            </div>
+            <div class="col-lg-4">
+              <label>Staff<span>*</span></label>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="Staff"
+              />
+            </div>
+            <div class="col-lg-4">
+              <label>Facilities<span>*</span></label>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="Facilities"
+              />
+            </div>
+            <div class="col-lg-4">
+              <label>Comfort<span>*</span></label>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="Comfort"
+              />
+            </div>
+            <div class="col-lg-4">
+              <label>upload<span>*</span></label>
+              <input type="file" class="form-control" formControlName="file" />
+            </div>
+          </div>
+        </ng-container>
+        <div class="d-flex py-3 justify-content-end">
+          <button class="btn btn-primary" (click)="AddReviewadd()">add</button>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+        <!-- <div class="card">
+    <div class="card-header">REVIEW</div>
+    <div class="card-body">
+      <div class="row">
+        <ng-container
+          formArrayName="Review"
+          *ngFor="let w of Review.controls; let i = index"
+        >
+          <div class="row" [formGroupName]="i">
+            <div class="col-lg-4">
+              <label>image<span>*</span></label>
+              <input type="file" class="form-control" formControlName="image" />
+            </div>
+            <div class="col-lg-4">
+              <label>name<span>*</span></label>
+              <input type="text" class="form-control" formControlName="name" />
+            </div>
+            <div class="col-lg-4">
+              <label>review<span>*</span></label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="review"
+              />
+            </div>
+            <div class="col-lg-4">
+              <label>rating<span>*</span></label>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="rating"
+              />
+            </div>
+            <div class="col-lg-4">
+              <label>date<span>*</span></label>
+              <input type="date" class="form-control" formControlName="date" />
+            </div>
+          </div>
+        </ng-container>
+        <div class="d-flex py-3 justify-content-end">
+          <button class="btn btn-primary" (click)="Reviewadd()">add</button>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+        <!-- <div class="card">
+    <div class="card-header">RECCOMMENDED FIGURES</div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-lg-12">
+          <label>liked<span>*</span></label>
+          <input
+            type="number"
+            class="form-control"
+            formControlName="likedReccommended"
+          />
+        </div>
+        <div class="col-lg-12">
+          <label>disliked<span>*</span></label>
+          <input
+            type="number"
+            class="form-control"
+            formControlName="dislikedReccommended"
+          />
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+        <div class="card">
+          <div class="card-header">Working Hours (Shift 1)</div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-12 col-lg-4">
+                <label>Monday<span>*</span></label>
+                <div class="flex">
+                  <input class="form-control" type="time" formControlName="mondayShift1_from" />
+                  <input class="form-control" type="time" formControlName="mondayShift1_to" />
+                </div>
+              </div>
+              <div class="col-12 col-lg-4">
+                <label>Tuesday<span>*</span></label>
+                <div class="flex">
+                  <input class="form-control" type="time" formControlName="tuesdayShift1_from" />
+                  <input class="form-control" type="time" formControlName="tuesdayShift1_to" />
+                </div>
+              </div>
+              <div class="col-12 col-lg-4">
+                <label>Wednesday<span>*</span></label>
+                <div class="flex">
+                  <input class="form-control" type="time" formControlName="wednesdayShift1_from" />
+                  <input class="form-control" type="time" formControlName="wednesdayShift1_to" />
+                </div>
+              </div>
+              <div class="col-12 col-lg-4">
+                <label>Thursday<span>*</span></label>
+                <div class="flex">
+                  <input class="form-control" type="time" formControlName="thursdayShift1_from" />
+                  <input class="form-control" type="time" formControlName="thursdayShift1_to" />
+                </div>
+              </div>
+              <div class="col-12 col-lg-4">
+                <label>Friday<span>*</span></label>
+                <div class="flex">
+                  <input class="form-control" type="time" formControlName="fridayShift1_from" />
+                  <input class="form-control" type="time" formControlName="fridayShift1_to" />
+                </div>
+              </div>
+              <div class="col-12 col-lg-4">
+                <label>Saturday<span>*</span></label>
+                <div class="flex">
+                  <input class="form-control" type="time" formControlName="saturdayShift1_from" />
+                  <input class="form-control" type="time" formControlName="saturdayShift1_to" />
+                </div>
+              </div>
+              <div class="col-12 col-lg-4">
+                <label>Sunday<span>*</span></label>
+                <div class="flex">
+                  <input class="form-control" type="time" formControlName="sundayShift1_from" />
+                  <input class="form-control" type="time" formControlName="sundayShift1_to" />
+                </div>
+              </div>
+              <div class="py-3 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary mb-2 mr-2" (click)="saveWorkingHoursSection()">
+                  save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">Working Hours (Shift 2)</div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-12 col-lg-4">
+                <label>Monday<span>*</span></label>
+                <div class="flex">
+                  <input class="form-control" type="time" formControlName="mondayShift2_from" />
+                  <input class="form-control" type="time" formControlName="mondayShift2_to" />
+                </div>
+              </div>
+              <div class="col-12 col-lg-4">
+                <label>Tuesday<span>*</span></label>
+                <div class="flex">
+                  <input class="form-control" type="time" formControlName="tuesdayShift2_from" />
+                  <input class="form-control" type="time" formControlName="tuesdayShift2_to" />
+                </div>
+              </div>
+              <div class="col-12 col-lg-4">
+                <label>Wednesday<span>*</span></label>
+                <div class="flex">
+                  <input class="form-control" type="time" formControlName="wednesdayShift2_from" />
+                  <input class="form-control" type="time" formControlName="wednesdayShift2_to" />
+                </div>
+              </div>
+              <div class="col-12 col-lg-4">
+                <label>Thursday<span>*</span></label>
+                <div class="flex">
+                  <input class="form-control" type="time" formControlName="thursdayShift2_from" />
+                  <input class="form-control" type="time" formControlName="thursdayShift2_to" />
+                </div>
+              </div>
+              <div class="col-12 col-lg-4">
+                <label>Friday<span>*</span></label>
+                <div class="flex">
+                  <input class="form-control" type="time" formControlName="fridayShift2_from" />
+                  <input class="form-control" type="time" formControlName="fridayShift2_to" />
+                </div>
+              </div>
+              <div class="col-12 col-lg-4">
+                <label>Saturday<span>*</span></label>
+                <div class="flex">
+                  <input class="form-control" type="time" formControlName="saturdayShift2_from" />
+                  <input class="form-control" type="time" formControlName="saturdayShift2_to" />
+                </div>
+              </div>
+              <div class="col-12 col-lg-4">
+                <label>Sunday<span>*</span></label>
+                <div class="flex">
+                  <input class="form-control" type="time" formControlName="sundayShift2_from" />
+                  <input class="form-control" type="time" formControlName="sundayShift2_to" />
+                </div>
+              </div>
+              <div class="py-3 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary mb-2 mr-2" (click)="saveWorkingHoursSection()">
+                  save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">CONTACTS</div>
+          <div class="card-body">
+            <div class="row">
+              <ng-container formArrayName="ContactAddress" *ngFor="let w of ContactAddress.controls; let i = index">
+                <div class="row" [formGroupName]="i">
+                  <div class="col-lg-4">
+                    <label>Contact Address<span>*</span></label>
+                    <input type="text" class="form-control" formControlName="address" />
+                  </div>
+                </div>
+              </ng-container>
+              <div class="d-flex py-3 justify-content-end">
+                <button class="btn btn-primary" (click)="ContactAddressadd()">
+                  add
+                </button>
+              </div>
+            </div>
+
+            <div class="row">
+              <ng-container formArrayName="ContactPhone" *ngFor="let w of ContactPhone.controls; let i = index">
+                <div class="row" [formGroupName]="i">
+                  <div class="col-lg-4">
+                    <label>Contact Phone<span>*</span></label>
+                    <input type="number" class="form-control" formControlName="phone" />
+                  </div>
+                </div>
+              </ng-container>
+              <div class="d-flex py-3 justify-content-end">
+                <button class="btn btn-primary" (click)="ContactPhoneadd()">
+                  add
+                </button>
+              </div>
+            </div>
+
+            <div class="row">
+              <ng-container formArrayName="ContactTollNo" *ngFor="let w of ContactTollNo.controls; let i = index">
+                <div class="row" [formGroupName]="i">
+                  <div class="col-lg-4">
+                    <label>Contact Toll Number<span>*</span></label>
+                    <input type="number" class="form-control" formControlName="tollNo" />
+                  </div>
+                </div>
+              </ng-container>
+              <div class="d-flex py-3 justify-content-end">
+                <button class="btn btn-primary" (click)="ContactTollNoadd()">
+                  add
+                </button>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-4">
+                <label>Mail<span>*</span></label>
+                <input type="mail" class="form-control" formControlName="ContactMail" />
+              </div>
+              <div class="col-lg-4">
+                <label>Website<span>*</span></label>
+                <input type="mail" class="form-control" formControlName="ContactWebsite" />
+              </div>
+              <div class="py-3 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary mb-2 mr-2" (click)="saveContactInfoSection()">
+                  save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">OTHER LINKS</div>
+
+          <div class="card-body">
+            <div class="row">
+              <ng-container formArrayName="OtherLinksSite" *ngFor="let w of OtherLinksSite.controls; let i = index">
+                <div class="row" [formGroupName]="i">
+                  <div class="col-lg-4">
+                    <label>add site links<span>*</span></label>
+                    <input type="text" class="form-control" formControlName="link" />
+                  </div>
+                </div>
+              </ng-container>
+              <div class="d-flex py-3 justify-content-end">
+                <button class="btn btn-primary" (click)="OtherLinksSiteadd()">
+                  add
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <div class="row">
+              <ng-container formArrayName="OtherLinksWEB" *ngFor="let w of OtherLinksWEB.controls; let i = index">
+                <div class="row" [formGroupName]="i">
+                  <div class="col-lg-4">
+                    <label>add website links<span>*</span></label>
+                    <input type="text" class="form-control" formControlName="link" />
+                  </div>
+                </div>
+              </ng-container>
+              <div class="d-flex py-3 justify-content-end">
+                <button class="btn btn-primary" (click)="OtherLinksWEBadd()">
+                  add
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <div class="row">
+              <label>Add Announcements<span>*</span></label>
+              <ng-container formArrayName="announcement" *ngFor="let w of announcement.controls; let i = index">
+                <div class="row" [formGroupName]="i">
+                  <div class="col-lg-6">
+                    <input type="text" class="form-control" formControlName="name" />
+                  </div>
+                </div>
+              </ng-container>
+              <div class="d-flex py-3 justify-content-end">
+                <button class="btn btn-primary" (click)="announcementAdd()">
+                  add
+                </button>
+              </div>
+              <div class="py-3 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary mb-2 mr-2" (click)="saveAdvertisementSection()">
+                  save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">PAYMENT MODES</div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-lg-4">
+                <label>Qr Code 1<span>*</span></label>
+                <br />
+
+                <div class="d-flex py-3 justify-content-start">
+                  <button type="button" class="btn btn-primary mb-2" (click)="
+                      launchmedia(
+                        'this.detailForm.patchValue({qrImage1: this.selectedimages.og_image});'
+                      )
+                    ">
+                    QR Code 1
+                  </button>
+                </div>
+
+                <div>
+                  <img src="{{ detailForm.controls['qrImage1'].value }}" class="thumbnail" />
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <label>Service Name 1<span>*</span></label>
+                <input type="text" class="form-control" formControlName="service_name1" />
+              </div>
+              <div class="col-lg-4">
+                <label>Business Name 1<span>*</span></label>
+                <input type="text" class="form-control" formControlName="business_name1" />
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-4">
+                <label>Qr Code 2<span>*</span></label>
+                <br />
+
+                <div class="d-flex py-3 justify-content-start">
+                  <button type="button" class="btn btn-primary mb-2" (click)="
+                      launchmedia(
+                        'this.detailForm.patchValue({qrImage2: this.selectedimages.og_image});'
+                      )
+                    ">
+                    QR Code 2
+                  </button>
+                </div>
+                <div>
+                  <img src="{{ detailForm.controls['qrImage2'].value }}" class="thumbnail" />
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <label>Service Name 2<span>*</span></label>
+                <input type="text" class="form-control" formControlName="service_name2" />
+              </div>
+              <div class="col-lg-4">
+                <label>Business Name 2<span>*</span></label>
+                <input type="text" class="form-control" formControlName="business_name2" />
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-4">
+                <label>Qr Code 3<span>*</span></label>
+                <br />
+                <div class="d-flex py-3 justify-content-start">
+                  <button type="button" class="btn btn-primary mb-2" (click)="
+                      launchmedia(
+                        'this.detailForm.patchValue({qrImage3: this.selectedimages.og_image});'
+                      )
+                    ">
+                    QR Code 3
+                  </button>
+                </div>
+                <div>
+                  <img src="{{ detailForm.controls['qrImage3'].value }}" class="thumbnail" />
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <label>Service Name 3<span>*</span></label>
+                <input type="text" class="form-control" formControlName="service_name3" />
+              </div>
+              <div class="col-lg-4">
+                <label>Business Name 3<span>*</span></label>
+                <input type="text" class="form-control" formControlName="business_name3" />
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-4">
+                <label>Qr Code 4<span>*</span></label>
+                <br />
+                <div class="d-flex py-3 justify-content-start">
+                  <button type="button" class="btn btn-primary mb-2" (click)="
+                      launchmedia(
+                        'this.detailForm.patchValue({qrImage4: this.selectedimages.og_image});'
+                      )
+                    ">
+                    QR Code 4
+                  </button>
+                </div>
+                <div>
+                  <img src="{{ detailForm.controls['qrImage4'].value }}" class="thumbnail" />
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <label>Service Name 4<span>*</span></label>
+                <input type="text" class="form-control" formControlName="service_name4" />
+              </div>
+              <div class="col-lg-4">
+                <label>Business Name 4<span>*</span></label>
+                <input type="text" class="form-control" formControlName="business_name4" />
+              </div>
+              <div class="py-3 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary mb-2 mr-2" (click)="savePaymentSection()">
+                  save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">UPI IDS</div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-lg-4">
+                <label>UPI Id 1<span>*</span></label>
+                <input type="text" class="form-control" formControlName="upiId1" />
+              </div>
+              <div class="col-lg-4">
+                <label>UPI Business Name 1<span>*</span></label>
+                <input type="text" class="form-control" formControlName="upiBusinessName1" />
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-4">
+                <label>UPI Id 2<span>*</span></label>
+                <input type="text" class="form-control" formControlName="upiId2" />
+              </div>
+              <div class="col-lg-4">
+                <label>UPI Business Name 2<span>*</span></label>
+                <input type="text" class="form-control" formControlName="upiBusinessName2" />
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-4">
+                <label>UPI Id 3<span>*</span></label>
+                <input type="text" class="form-control" formControlName="upiId3" />
+              </div>
+              <div class="col-lg-4">
+                <label>UPI Business Name 3<span>*</span></label>
+                <input type="text" class="form-control" formControlName="upiBusinessName3" />
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-4">
+                <label>UPI Id 4<span>*</span></label>
+                <input type="text" class="form-control" formControlName="upiId4" />
+              </div>
+              <div class="col-lg-4">
+                <label>UPI Business Name 4<span>*</span></label>
+                <input type="text" class="form-control" formControlName="upiBusinessName4" />
+              </div>
+              <div class="py-3 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary mb-2 mr-2" (click)="savePaymentSection()">
+                  save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">PRICING RANGE (in 1000s)</div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-lg-4">
+                <label>Type (in Rs) <span>*</span></label>
+                <select formControlName="price_type" class="form-control">
+                  <option value="Cheap">Cheap</option>
+                  <option value="Economical">Economical</option>
+                  <option value="Moderate">Moderate</option>
+                  <option value="Expensive">Expensive</option>
+                  <option value="Luxury">Luxury</option>
+                </select>
+              </div>
+              <div class="col-lg-4">
+                <label>Minumum Price (in Rs) <span>*</span></label>
+                <input type="Number" class="form-control" formControlName="price_range_min" />
+              </div>
+              <div class="col-lg-4">
+                <label>Maximum Price (in Rs) <span>*</span></label>
+                <input type="Number" class="form-control" formControlName="price_range_max" />
+              </div>
+              <!-- <div class="col-lg-4">
+          <label>Expensive (in Rs) <span>*</span></label>
+          <input
+            type="Number"
+            class="form-control"
+            formControlName="pricingExpensive"
+          />
+        </div>
+        <div class="col-lg-4">
+          <label>Luxury (in Rs) <span>*</span></label>
+          <input
+            type="Number"
+            class="form-control"
+            formControlName="pricingLuxary"
+          />
+        </div> -->
+              <div class="py-3 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary mb-2 mr-2" (click)="savePriceRangeSection()">
+                  save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">STATISTICS</div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-lg-4">
+                <label>Views<span>*</span></label>
+                <input type="Number" class="form-control" formControlName="statisticsViews" />
+              </div>
+              <div class="col-lg-4">
+                <label>Bookmarks<span>*</span></label>
+                <input type="Number" class="form-control" formControlName="statisticsBookmarks" />
+              </div>
+              <div class="col-lg-4">
+                <label>Subscribers<span>*</span></label>
+                <input type="Number" class="form-control" formControlName="statisticsSubscribers" />
+              </div>
+              <div class="col-lg-4">
+                <label>Messages<span>*</span></label>
+                <input type="Number" class="form-control" formControlName="statisticsMessages" />
+              </div>
+              <div class="col-lg-4">
+                <label>Reviews<span>*</span></label>
+                <input type="Number" class="form-control" formControlName="statisticsReviews" />
+              </div>
+              <div class="col-lg-4">
+                <label>Product Booking<span>*</span></label>
+                <input type="Number" class="form-control" formControlName="statisticsProductBooking" />
+              </div>
+              <div class="col-lg-4">
+                <label>Appointment Booking<span>*</span></label>
+                <input type="Number" class="form-control" formControlName="statisticsAppointmentBooking" />
+              </div>
+              <div class="col-lg-4">
+                <label>Gallery Items<span>*</span></label>
+                <input type="Number" class="form-control" formControlName="statisticsGalleryItems" />
+              </div>
+              <div class="py-3 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary mb-2 mr-2" (click)="saveStatisticsSection()">
+                  save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">REPRESENTATIVE</div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-lg-4">
+                <label>representative image<span>*</span></label>
+                <br />
+                <div class="d-flex justify-content-start">
+                  <button type="button" class="btn btn-primary mb-2" (click)="
+                      launchmedia(
+                        'this.detailForm.patchValue({representativeImage: this.selectedimages.og_image});'
+                      )
+                    ">
+                    Image
+                  </button>
+                </div>
+                <div>
+                  <img src="{{ detailForm.controls['representativeImage'].value }}" class="thumbnail" />
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <label>representative Name<span>*</span></label>
+                <input type="text" class="form-control" formControlName="representativeName" />
+              </div>
+              <div class="col-lg-4">
+                <label>representative hosted place number<span>*</span></label>
+                <input type="number" class="form-control" formControlName="representativeHostedPlace" />
+              </div>
+              <div class="col-lg-4">
+                <label>representative status<span>*</span></label>
+                <select class="form-control" formControlName="representativeStatus">
+                  <option value="online">ONLINE</option>
+                  <option value="offline">OFFLINE</option>
+                </select>
+              </div>
+              <div class="col-lg-4">
+                <label>representative created date<span>*</span></label>
+                <input type="date" class="form-control" formControlName="representativeCreatedDate" />
+              </div>
+              <div class="col-lg-4">
+                <label>representative approved date<span>*</span></label>
+                <input type="date" class="form-control" formControlName="representativeApprovedDate" />
+              </div>
+              <div class="col-lg-4">
+                <label>representative managed date<span>*</span></label>
+                <input type="date" class="form-control" formControlName="representativeManagedDate"
+                  (change)="calculateAverageListingPrice()" />
+              </div>
+              <div class="py-3 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary mb-2 mr-2" (click)="saveRepresentativeSection()">
+                  save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">FAQ</div>
+          <div class="card-body">
+            <div class="">
+              <div class="card d-flex justify-content-center">
+                <p-table [value]="customers" [paginator]="true" [rows]="5" [rowsPerPageOptions]="[5, 10, 20]">
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th style="width: 25%">Name</th>
+                      <th style="width: 25%">Country</th>
+                      <th style="width: 25%">Company</th>
+                      <th style="width: 25%">Representative</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-customer>
+                    <tr>
+                      <td>{{ customer.name }}</td>
+                      <td>{{ customer.country }}</td>
+                      <td>{{ customer.company }}</td>
+                      <td>{{ customer.representative }}</td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- <div class="card">
+          <div class="card-header">
+            <div class="table-action">
+              <div>Faq List</div>
+
+              <div>
+                <button
+                  type="button"
+                  class="btn btn-danger-add mb-2 mr-2"
+                  (click)="add_faq_listing()"
+                >
+                  Add
+                </button>
+              </div>
+            </div>
+          </div>
+        </div> -->
+        <!-- <div class="card-body">
+      <div class="customtable">
+        <table
+          datatable
+          class="row-border hover"
+          [dtOptions]="dtOptions[0]"
+          [dtTrigger]="dtTrigger"
+        >
+          <thead>
+            <tr>
+              <th>SL#</th>
+              <th>Name</th>
+              <th>Content</th>
+              <th>Edit</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of faq_data; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ data.name }}</td>
+              <td>
+                <button
+                  type="submit"
+                  class="btn btn-info"
+                  (click)="faq_content(data._id)"
+                >
+                  Content
+                </button>
+              </td>
+              <td>
+                <button
+                  type="submit"
+                  class="btn btn-primary"
+                  (click)="edit_faq(data._id)"
+                >
+                  Edit
+                </button>
+              </td>
+              <td>
+                <button
+                  type="submit"
+                  class="btn btn-danger"
+                  (click)="delete_faq(data._id)"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div> -->
+
+        <div style="padding: 0 0 20px 0">
+          <button class="btn btn-primary" style="width: 10vh" (click)="onsubmit()">
+            SAVE FORM
+          </button>
+        </div>
+      </form>
+
+
+      <ng-template #media let-close="close">
+        <div class="modal-header">
+          <h5 class="text-white">Select Media</h5>
+          <button type="button" class="btn-primary border-0" (click)="close()">
+            <i class="fa-solid fa-xmark" style="color: #ffff"></i>
+          </button>
+        </div>
+        <div class="p-3">
+          <app-upload-media (selectedImg)="getSelectedImgs($event)"></app-upload-media>
+        </div>
+      </ng-template>
+      <!------Faq tables-------->
